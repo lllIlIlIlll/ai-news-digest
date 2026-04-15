@@ -1,11 +1,5 @@
 import { FetchResult, Article } from './types.js';
-
-const RSS_SOURCES = {
-  'TechCrunch': 'https://techcrunch.com/category/artificial-intelligence/feed/',
-  'The Verge': 'https://www.theverge.com/rss/ai-artificial-intelligence/index.xml',
-} as const;
-
-const HN_SOURCE = 'https://hnrss.org/newest?q=AI&count=30';
+import { RSS_SOURCES, HN_SOURCE } from './config.js';
 
 const TIMEOUT_MS = 5000;
 const MAX_RETRIES = 3;
