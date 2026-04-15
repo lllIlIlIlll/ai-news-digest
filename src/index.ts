@@ -3,7 +3,7 @@ import cron from 'node-cron';
 import { fetchAllSources } from './fetcher.js';
 import { parseArticles } from './parser.js';
 import { summarizeArticles } from './summarizer.js';
-import { filterLast24Hours, deduplicateByUrl } from './filter.js';
+import { filterLast24Hours, deduplicateByUrl, markHighlights } from './filter.js';
 import { formatDigest } from './formatter.js';
 import { writeDigest } from './output.js';
 import { DigestStats } from './types.js';
@@ -29,7 +29,7 @@ async function runDigest(quiet: boolean) {
     await summarizeArticles(articles, quiet);
   }
 
-  const recentArticles = filterLast24Hours(articles);
+  const recentArticles = filterLast24Hours(markHighlights(articles));
 
   if (!quiet) {
     console.log(`\n抓取完成，共解析 ${articles.length} 篇文章`);

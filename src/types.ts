@@ -6,6 +6,8 @@ export interface Article {
   source: string;
   /** 摘要：description前100字 */
   description: string;
+  /** 是否精读 */
+  isHighlight?: boolean;
 }
 
 /** 单一来源的抓取结果 */

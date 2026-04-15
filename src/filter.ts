@@ -1,5 +1,11 @@
 import { Article } from './types.js';
 
+const HIGHLIGHT_KEYWORDS = [
+  'GPT', 'LLM', '大模型', 'Agent',
+  'OpenAI', 'Anthropic', 'DeepMind', 'Gemini',
+  'AI Agent', '多模态', '推理模型',
+];
+
 export function deduplicateByUrl(articles: Article[]): Article[] {
   const seen = new Set<string>();
   return articles.filter(article => {
@@ -7,6 +13,15 @@ export function deduplicateByUrl(articles: Article[]): Article[] {
     seen.add(article.link);
     return true;
   });
+}
+
+export function markHighlights(articles: Article[]): Article[] {
+  return articles.map(article => ({
+    ...article,
+    isHighlight: HIGHLIGHT_KEYWORDS.some(kw =>
+      article.title.includes(kw) || article.description.includes(kw)
+    ),
+  }));
 }
 
 export function filterLast24Hours(articles: Article[]): Article[] {

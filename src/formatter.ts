@@ -27,8 +27,9 @@ export function formatDigest(
 
   for (const article of articles) {
     const timeLabel = article.pubDate.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    const highlightTag = article.isHighlight ? ' ⭐精读' : '';
     lines.push(
-      `### ${timeLabel} [${article.source}] ${article.title}`,
+      `### ${timeLabel} [${article.source}] ${article.title}${highlightTag}`,
       '',
       `${article.description}`,
       '',
