@@ -3,7 +3,7 @@ export interface Article {
   title: string;
   link: string;
   pubDate: Date;
-  source: 'TechCrunch' | 'The Verge' | 'Hacker News';
+  source: string;
   /** 摘要：description前100字 */
   description: string;
 }
@@ -23,6 +23,6 @@ export interface CLIArgs {
 /** 新闻聚合统计信息 */
 export interface DigestStats {
   totalArticles: number;
-  failedSources: Article['source'][];
+  failedSources: string[];
   sourceBreakdown: Record<string, number>;
 }

@@ -29,9 +29,13 @@ async function fetchWithTimeout(url: string, retries = MAX_RETRIES): Promise<str
 export async function fetchAllSources(quiet: boolean): Promise<RawFetchResult[]> {
   if (!quiet) console.log('Starting RSS fetch...\n');
 
+  const rssKeys = Object.keys(RSS_SOURCES) as (keyof typeof RSS_SOURCES)[];
+  const rssPromises = rssKeys.map(key =>
+    fetchSource(key, RSS_SOURCES[key], quiet)
+  );
+
   const results = await Promise.all([
-    fetchSource('TechCrunch', RSS_SOURCES['TechCrunch'], quiet),
-    fetchSource('The Verge', RSS_SOURCES['The Verge'], quiet),
+    ...rssPromises,
     fetchSource('Hacker News', HN_SOURCE, quiet),
   ]);
 

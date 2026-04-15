@@ -9,8 +9,8 @@ export function formatDigest(
   const dateStr = publishedAt.toISOString().split('T')[0];
   const timeStr = publishedAt.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
 
-  const sourceList = ['TechCrunch', 'The Verge', 'Hacker News']
-    .filter(s => (stats.sourceBreakdown[s] ?? 0) > 0)
+  const sourceList = Object.keys(stats.sourceBreakdown)
+    .filter(k => stats.sourceBreakdown[k] > 0)
     .join(' / ');
 
   const lines: string[] = [
