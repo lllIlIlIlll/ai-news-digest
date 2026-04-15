@@ -4,15 +4,16 @@
 
 **Goal:** 对每篇文章调用 Claude API 生成一句话中文摘要，替换原有 description 截断方案
 
-**Architecture:** 在现有 pipeline 中插入 `summarizeArticles` 步骤，使用 claude-sonnet-4-6 模型串行调用 API，摘要结果直接写回 Article.description 字段。`filterLast24Hours` 在摘要生成之后执行，减少不必要的 API 调用。
+**Architecture:** 在现有 pipeline 中插入 `summarizeArticles` 步骤，使用 claude-sonnet-4-6 模型串行调用 API，摘要结果直接写回 Article.description 字段。`filterLast1Hour` 在摘要生成之后执行，减少不必要的 API 调用。
 
-**Tech Stack:** TypeScript + tsx + 原生 fetch（直接调用 Anthropic API）
+**Tech Stack:** TypeScript + tsx + @anthropic-ai/sdk（直接调用 Anthropic API）
 
 ---
 
 ## 依赖变更
 
-- 新增 `@anthropic-ai/sdk` 包（或使用原生 fetch 直接调用，无新增依赖）
+- 新增 `@anthropic-ai/sdk` 包
+- 新增 `ANTHROPIC_BASE_URL` 环境变量支持 MiniMax API
 
 ---
 
@@ -58,9 +59,14 @@ function getApiKey(): string {
   return key;
 }
 
+function getBaseUrl(): string {
+  return process.env.ANTHROPIC_BASE_URL || 'https://api.minimaxi.com/anthropic';
+}
+
 export async function summarizeArticles(articles: Article[], quiet: boolean): Promise<void> {
   const apiKey = getApiKey();
-  const client = new Anthropic({ apiKey });
+  const baseUrl = getBaseUrl();
+  const client = new Anthropic({ apiKey, baseURL: baseUrl });
 
   for (let i = 0; i < articles.length; i++) {
     const article = articles[i];
@@ -114,7 +120,7 @@ async function generateSummary(client: Anthropic, title: string, currentDescript
 // 当前 pipeline (简化版):
 // const fetchResults = await fetchAllSources(quiet);
 // const articles = parseArticles(fetchResults);
-// const recentArticles = filterLast24Hours(articles);
+// const recentArticles = filterLast1Hour(articles);
 // const stats = ...;
 // const markdown = formatDigest(recentArticles, stats, publishedAt);
 // await writeDigest(markdown, publishedAt);
@@ -122,24 +128,25 @@ async function generateSummary(client: Anthropic, title: string, currentDescript
 
 - [ ] **Step 2: 修改 index.ts**
 
-在 `parseArticles` 之后、`filterLast24Hours` 之前插入 `summarizeArticles`：
+在 `parseArticles` 之后、`filterLast1Hour` 之前插入 `summarizeArticles`：
 
 ```typescript
 import { fetchAllSources } from './fetcher.js';
 import { parseArticles } from './parser.js';
 import { summarizeArticles } from './summarizer.js';  // 新增
-import { filterLast24Hours } from './filter.js';
+import { filterLast1Hour } from './filter.js';
 import { formatDigest } from './formatter.js';
 import { writeDigest } from './output.js';
 import { DigestStats } from './types.js';
 
-function parseArgs(): { quiet: boolean } {
+function parseArgs(): { quiet: boolean; cron: boolean } {
   const quiet = process.argv.includes('--quiet') || process.argv.includes('-q');
-  return { quiet };
+  const cron = process.argv.includes('-cron');
+  return { quiet, cron };
 }
 
 async function main() {
-  const { quiet } = parseArgs();
+  const { quiet, cron } = parseArgs();
   const publishedAt = new Date();
 
   if (!quiet) {
@@ -155,11 +162,11 @@ async function main() {
     await summarizeArticles(articles, quiet);
   }
 
-  const recentArticles = filterLast24Hours(articles);
+  const recentArticles = filterLast1Hour(articles);
 
   if (!quiet) {
     console.log(`\n抓取完成，共解析 ${articles.length} 篇文章`);
-    console.log(`过滤后（24小时内）: ${recentArticles.length} 篇`);
+    console.log(`过滤后（1小时内）: ${recentArticles.length} 篇`);
   }
 
   const failedSources = fetchResults
@@ -203,7 +210,10 @@ main().catch(err => {
 
 - [ ] **Step 1: 设置 API Key**
 
-Run: `export ANTHROPIC_API_KEY=your_key_here`
+```bash
+export ANTHROPIC_API_KEY=your_key_here
+export ANTHROPIC_BASE_URL=https://api.minimaxi.com/anthropic
+```
 
 - [ ] **Step 2: 运行正常模式**
 
@@ -221,7 +231,7 @@ Expected:
 
 - [ ] **Step 4: 运行静默模式**
 
-Run: `ANTHROPIC_API_KEY=xxx npx tsx src/index.ts --quiet`
+Run: `ANTHROPIC_API_KEY=xxx ANTHROPIC_BASE_URL=https://api.minimaxi.com/anthropic npx tsx src/index.ts --quiet`
 Expected: 无进度日志，日报正常生成
 
 - [ ] **Step 5: 测试 API Key 缺失**

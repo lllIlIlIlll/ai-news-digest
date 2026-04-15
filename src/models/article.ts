@@ -4,25 +4,18 @@ export interface Article {
   link: string;
   pubDate: Date;
   source: string;
-  /** 摘要：description前100字 */
   description: string;
-  /** 是否精读 */
+  chineseTitle?: string;
+  interpretation?: string;
   isHighlight?: boolean;
 }
 
-/** 单一来源的抓取结果 */
 export interface FetchResult {
   source: Article['source'];
   articles: Article[];
   error?: string;
 }
 
-/** CLI 命令行参数 */
-export interface CLIArgs {
-  quiet: boolean;
-}
-
-/** 新闻聚合统计信息 */
 export interface DigestStats {
   totalArticles: number;
   failedSources: string[];

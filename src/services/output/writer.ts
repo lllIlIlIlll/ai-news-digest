@@ -8,8 +8,6 @@ export async function writeDigest(content: string, date: Date): Promise<void> {
 
   await mkdir(outputDir, { recursive: true });
 
-  await Promise.all([
-    writeFile(latestPath, content, 'utf-8'),
-    writeFile(datedPath, content, 'utf-8'),
-  ]);
+  await writeFile(latestPath, content, 'utf-8');
+  await writeFile(datedPath, content, 'utf-8');
 }

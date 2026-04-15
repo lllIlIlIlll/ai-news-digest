@@ -1,4 +1,4 @@
-import { Article, DigestStats } from './types.js';
+import type { Article, DigestStats } from '../models/article.js';
 
 export function formatDigest(
   articles: Article[],
@@ -18,7 +18,7 @@ export function formatDigest(
     '',
     `> 自动聚合自 ${sourceList}，发布于 ${timeStr}`,
     '',
-    `## 统计`,
+    '## 统计',
     `共收录 ${stats.totalArticles} 篇，来自 ${sourcesCount} 个源${stats.failedSources.length > 0 ? `\n> 抓取失败: ${stats.failedSources.join(', ')}` : ''}`,
     '',
     '---',
@@ -26,14 +26,21 @@ export function formatDigest(
   ];
 
   for (const article of articles) {
-    const timeLabel = article.pubDate.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    const timeLabel = article.pubDate.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const highlightTag = article.isHighlight ? ' ⭐精读' : '';
+    const titleLine = article.chineseTitle
+      ? `${article.chineseTitle}\n\n*${article.title}*`
+      : article.title;
+    const interpretationLine = article.interpretation ? `\n\n**解读：**${article.interpretation}` : '';
+
     lines.push(
-      `### ${timeLabel} [${article.source}] ${article.title}${highlightTag}`,
+      `### [${article.source}] ${titleLine}${highlightTag}`,
       '',
-      `${article.description}`,
+      `> **摘要：**${article.description}${interpretationLine}`,
       '',
-      `${article.link}`,
+      `**链接：**${article.link}`,
+      '',
+      `**时间：**${timeLabel}`,
       '',
       '---',
       ''
