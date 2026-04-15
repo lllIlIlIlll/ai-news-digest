@@ -6,17 +6,17 @@
 
 ```bash
 # 安装依赖
-npm install
+bun install
 
 # 配置环境变量
 cp .env.example .env
 # 编辑 .env 填入 ANTHROPIC_API_KEY 和 ANTHROPIC_BASE_URL
 
 # 运行一次
-npm start
+bun start
 
 # 开启定时模式（每天早上8点自动运行）
-npm start -- -cron
+bun start -- -cron
 ```
 
 ## RSS 源（20+）
@@ -45,9 +45,9 @@ npm start -- -cron
 
 | 命令 | 说明 |
 |------|------|
-| `npm start` | 立即执行一次 |
-| `npm start -- --quiet` | 静默模式（无进度输出） |
-| `npm start -- -cron` | 定时模式（每天8:00执行） |
+| `bun start` | 立即执行一次 |
+| `bun start -- --quiet` | 静默模式（无进度输出） |
+| `bun start -- -cron` | 定时模式（每天8:00执行） |
 
 ## 输出
 
@@ -99,5 +99,5 @@ cli → core → services → models/utils
 
 ```bash
 # 运行单元测试
-npx vitest run
+bun run vitest run
 ```

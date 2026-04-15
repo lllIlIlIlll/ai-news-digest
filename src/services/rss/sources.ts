@@ -1,11 +1,8 @@
 import type { RSSSource } from '../../models/config.js';
 
 const RESEARCH_SOURCES: RSSSource[] = [
-  { name: 'GoogleResearch', url: 'https://research.google/blog/rss' },
-  { name: 'DeepMind', url: 'https://deepmind.google/discover/blog/rss' },
   { name: 'OpenAI', url: 'https://openai.com/news/rss.xml' },
   { name: 'BAIR', url: 'https://bair.berkeley.edu/blog/feed.xml' },
-  { name: 'AWS_ML', url: 'https://aws.amazon.com/blogs/machine-learning/feed' },
   { name: 'AmazonScience', url: 'https://www.amazon.science/index.rss' },
 ];
 

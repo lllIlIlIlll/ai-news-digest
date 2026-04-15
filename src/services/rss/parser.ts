@@ -6,6 +6,9 @@ import { decodeEntities } from '../../utils/html.js';
 const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: '@_',
+  processEntities: {
+    maxTotalExpansions: 10000,
+  },
 });
 
 function truncateDescription(text: string, maxChars = 100): string {
