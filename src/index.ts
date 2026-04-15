@@ -3,7 +3,7 @@ import cron from 'node-cron';
 import { fetchAllSources } from './fetcher.js';
 import { parseArticles } from './parser.js';
 import { summarizeArticles } from './summarizer.js';
-import { filterLast24Hours } from './filter.js';
+import { filterLast24Hours, deduplicateByUrl } from './filter.js';
 import { formatDigest } from './formatter.js';
 import { writeDigest } from './output.js';
 import { DigestStats } from './types.js';
@@ -22,7 +22,7 @@ async function runDigest(quiet: boolean) {
   }
 
   const fetchResults = await fetchAllSources(quiet);
-  const articles = parseArticles(fetchResults);
+  const articles = deduplicateByUrl(parseArticles(fetchResults));
 
   if (articles.length > 0) {
     if (!quiet) console.log('\n🤖 开始生成AI摘要...\n');
