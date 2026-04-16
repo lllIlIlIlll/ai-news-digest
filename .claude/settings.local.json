@@ -20,5 +20,29 @@
       "Bash(git add:*)",
       "Bash(git reset:*)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm test"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "agent",
+            "prompt": "Verify that all unit tests pass. Run the test suite and check the results.",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
   }
 }
