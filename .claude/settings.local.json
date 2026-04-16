@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__zread__read_file",
+      "Bash(for:*)",
+      "Bash(do:*)",
+      "Bash(then:*)",
+      "Bash(else echo \"OK \\(deleted\\): $f\")",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(bun install:*)",
+      "Bash(brew install:*)",
+      "Bash(curl:*)",
+      "Bash(bash:*)",
+      "Bash(bun start)",
+      "Bash(bun run:*)",
+      "Bash(bun pm ls)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)"
+    ]
+  }
+}
