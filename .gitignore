@@ -5,3 +5,4 @@ dist/
 .DS_Store
 output/*.md
 !output/.gitkeep
+output/failed-sources.json

@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import cron from 'node-cron';
 import { parseArgs } from './parser.js';
 import { runAggregation } from '../core/aggregator.js';

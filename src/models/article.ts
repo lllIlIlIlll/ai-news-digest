@@ -12,8 +12,9 @@ export interface Article {
 
 export interface FetchResult {
   source: Article['source'];
-  articles: Article[];
+  xml?: string;
   error?: string;
+  skipped?: boolean;
 }
 
 export interface DigestStats {

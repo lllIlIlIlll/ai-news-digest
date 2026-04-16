@@ -39,13 +39,13 @@ export async function runAggregation(options: AggregatorOptions): Promise<Aggreg
   }
 
   const failedSources = fetchResults
-    .filter((r: FetchResult) => r.error)
+    .filter((r: FetchResult) => r.error || r.skipped)
     .map((r: FetchResult) => r.source);
 
-  const sourceBreakdown: Record<string, number> = {};
-  for (const a of recentArticles) {
-    sourceBreakdown[a.source] = (sourceBreakdown[a.source] ?? 0) + 1;
-  }
+  const sourceBreakdown = recentArticles.reduce<Record<string, number>>((acc, a) => {
+    acc[a.source] = (acc[a.source] ?? 0) + 1;
+    return acc;
+  }, {});
 
   const stats: DigestStats = {
     totalArticles: recentArticles.length,
